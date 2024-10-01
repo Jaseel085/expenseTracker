@@ -1,3 +1,4 @@
+import 'package:expense_tracker/features/controller/expense_controller.dart';
 import 'package:expense_tracker/models/expenseModel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -107,6 +108,7 @@ class _ExpenseShowScreenState extends ConsumerState<ExpenseShowScreen> {
                       Expensemodel expenseModel =Expensemodel(
                           name: expenseNameController.text,
                           expense: double.tryParse(expenseAmountController.text));
+                      ref.watch(expenseControllerProvider.notifier).uploadExpence(expenseModel);
                       ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             backgroundColor: Colors.green,
@@ -205,6 +207,7 @@ class _ExpenseShowScreenState extends ConsumerState<ExpenseShowScreen> {
                         padding: const EdgeInsets.only(left: 20.0),
                         child: Text("Total Expence:00.00",style: TextStyle(
                           color: Colors.white,
+                          fontSize: wi*0.05,
                           fontWeight: FontWeight.bold
                         ),),
                       )
