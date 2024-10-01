@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expense_tracker/core/core/failour.dart';
 import 'package:expense_tracker/core/core/type_def.dart';
@@ -28,10 +30,18 @@ FutureVoid uploadExpense(Expensemodel expenseModel)async {
     throw e.message!;
   }catch (e){
     return left(Failure(e.toString()));
-
   }
 }
 
+Stream<List<Expensemodel>> showExpense(){
+  return _expense.snapshots().map((event) {
+    List <Expensemodel>expense=[];
+    for(var doc in event.docs){
+      expense.add(Expensemodel.fromMap(doc.data()as Map<String,dynamic>));
+    }
+    return expense;
+  },);
+}
 CollectionReference get _expense=>
     _firestore.collection(FirebaseConstants.expense);
 }

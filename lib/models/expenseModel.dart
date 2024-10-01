@@ -28,7 +28,7 @@ class Expensemodel{
   factory Expensemodel.fromMap(Map<String, dynamic> map) {
     return Expensemodel(
       name: map['name'] as String,
-      expense: map['expense'] as double,
+      expense: map['expense'] ,
     );
   }
 }

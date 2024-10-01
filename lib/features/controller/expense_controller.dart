@@ -9,6 +9,11 @@ final expenseControllerProvider = StateNotifierProvider<ExpenseController,bool >
 
 });
 
+final getallExpense = StreamProvider((ref) {
+  final expenseController = ref.watch(expenseControllerProvider.notifier);
+  return expenseController.showExpense();
+});
+
 
 class ExpenseController extends StateNotifier<bool>{
   final ExpenseRepository _repository;
@@ -21,6 +26,10 @@ class ExpenseController extends StateNotifier<bool>{
 
   Future uploadExpence(Expensemodel expenseModel){
     return _repository.uploadExpense(expenseModel);
+  }
+
+  Stream<List<Expensemodel>> showExpense(){
+    return _repository.showExpense();
   }
 
 }

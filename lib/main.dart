@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
     wi=MediaQuery.of(context).size.width;
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const ExpenseShowScreen(
+      home:  ExpenseShowScreen(
       )
     );
   }

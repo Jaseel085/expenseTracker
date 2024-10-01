@@ -1,3 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:expense_tracker/core/core/commen/error.dart';
+import 'package:expense_tracker/core/core/commen/loader.dart';
 import 'package:expense_tracker/features/controller/expense_controller.dart';
 import 'package:expense_tracker/models/expenseModel.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +20,14 @@ class _ExpenseShowScreenState extends ConsumerState<ExpenseShowScreen> {
   final expenseNameController=TextEditingController();
   final expenseAmountController=TextEditingController();
   final formkey=GlobalKey<FormState>();
+
+
+  List totals=[];
+  var sum=0;
+  double total=0;
+
+
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -66,6 +77,9 @@ class _ExpenseShowScreenState extends ConsumerState<ExpenseShowScreen> {
                             color: Colors.black.withOpacity(0.5)
                           ),
                           labelText: "Expense name",
+                            labelStyle: TextStyle(
+                                color: Colors.teal
+                            )
             
                         ),
                       ),
@@ -92,6 +106,9 @@ class _ExpenseShowScreenState extends ConsumerState<ExpenseShowScreen> {
                             color: Colors.black.withOpacity(0.5)
                           ),
                           labelText: "Expense amount",
+                          labelStyle: TextStyle(
+                            color: Colors.teal
+                          )
             
                         ),
                       ),
@@ -156,46 +173,64 @@ class _ExpenseShowScreenState extends ConsumerState<ExpenseShowScreen> {
                   fontWeight: FontWeight.w600
                 ),),
                 SizedBox(height: wi*0.05,),
-                SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      height: wi*0.5,
-                      child: ListView.separated(
-                        physics: BouncingScrollPhysics(),
-                        itemCount: 5,
-                        itemBuilder: (context, index) {
-                          return Container(
-                            decoration: BoxDecoration(
-                              color: Colors.teal,
-                              borderRadius: BorderRadius.circular(wi*0.03)
+                ref.watch(getallExpense).when(
+                    data: (expense) {
+
+                      total=0;
+                      for(int i=0;i<expense.length;i++){
+                        total=total+expense[i].expense!.toDouble();
+                      }
+                      return
+                      SingleChildScrollView(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                            height: wi*0.5,
+                            child: ListView.separated(
+                              physics: BouncingScrollPhysics(),
+                              itemCount: expense.length,
+                              itemBuilder: (context, index) {
+                                return Container(
+                                  decoration: BoxDecoration(
+                                      color: Colors.teal,
+                                      borderRadius: BorderRadius.circular(wi*0.03)
+                                  ),
+                                  width: wi*1,
+                                  height: wi*0.15,
+                                  child:  Padding(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(expense[index].name.toString(),
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                          ),),
+                                        Text(expense[index].expense.toString(),
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                          ),),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                              separatorBuilder: (context, index) {
+                                return SizedBox(height: wi*0.03,);
+                              },
                             ),
-                            width: wi*1,
-                              height: wi*0.15,
-                            child: const Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text("(Expence name)",style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                  ),),
-                                  Text("(00)",style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                  ),),
-                                ],
-                              ),
-                            ),
-                          );
-                        },
-                        separatorBuilder: (context, index) {
-                          return SizedBox(height: wi*0.03,);
-                        },
-                      ),
-                    ),
-                  ),
+                          ),
+                        ),
+                      );
+                    }
+
+                    ,
+
+
+                    error: (error, stackTrace) => ErrorText(error: error.toString()),
+                    loading:()=> Loader()
                 ),
                 Container(
                   height: wi*0.11,
@@ -205,7 +240,7 @@ class _ExpenseShowScreenState extends ConsumerState<ExpenseShowScreen> {
                     children: [
                       Padding(
                         padding: const EdgeInsets.only(left: 20.0),
-                        child: Text("Total Expence:00.00",style: TextStyle(
+                        child: Text("Total Expence:${total}",style: TextStyle(
                           color: Colors.white,
                           fontSize: wi*0.05,
                           fontWeight: FontWeight.bold
