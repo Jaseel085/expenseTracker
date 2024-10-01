@@ -237,10 +237,11 @@ class _ExpenseShowScreenState extends ConsumerState<ExpenseShowScreen> {
                   width: wi*1,
                   color: Colors.teal,
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(left: 20.0),
-                        child: Text("Total Expence:${total}",style: TextStyle(
+                        padding: const EdgeInsets.only(right: 30.0),
+                        child: Text("Total Expence:${total}0",style: TextStyle(
                           color: Colors.white,
                           fontSize: wi*0.05,
                           fontWeight: FontWeight.bold
